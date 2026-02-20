@@ -4,167 +4,207 @@
     <style>
         :root { 
             --accent: #00ff88; 
-            --accent-glow: rgba(0, 255, 136, 0.3);
+            --accent-glow: rgba(0, 255, 136, 0.2);
             --bg: #050505; 
-            --panel: rgba(15, 15, 15, 0.85); 
+            --panel: rgba(12, 12, 12, 0.98); 
             --card: rgba(255, 255, 255, 0.03);
-            --text-main: #ffffff;
-            --text-dim: #777;
-            --glass-border: rgba(255, 255, 255, 0.07);
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --sidebar-width: 320px;
         }
 
         body { 
             background: var(--bg); 
-            background-image: radial-gradient(circle at 50% -10%, #11251b 0%, var(--bg) 70%);
-            color: var(--text-main); 
-            font-family: 'Inter', sans-serif; 
+            background-image: radial-gradient(circle at 50% -20%, #11251b 0%, var(--bg) 80%);
+            color: white; font-family: 'Inter', -apple-system, sans-serif; 
             display: flex; margin: 0; height: 100vh; overflow: hidden; 
         }
 
-        /* SIDEBAR */
+        /* --- SIDEBAR --- */
         .sidebar { 
-            width: 320px; 
+            width: var(--sidebar-width); 
             background: var(--panel); 
             backdrop-filter: blur(20px);
             border-right: 1px solid var(--glass-border); 
-            padding: 40px 24px; 
+            padding: 30px 20px; 
             display: flex; flex-direction: column;
+            z-index: 10;
         }
 
-        .sidebar h2 {
-            font-size: 0.8rem;
-            letter-spacing: 4px;
-            color: var(--text-dim);
-            text-transform: uppercase;
-            margin-bottom: 40px;
-        }
-
-        /* INSTANZ KARTEN */
-        .inst-list { flex: 1; overflow-y: auto; margin-bottom: 20px; }
+        .inst-list { flex: 1; overflow-y: auto; margin-top: 20px; padding-right: 5px; }
         .inst-card { 
-            background: var(--card); 
-            padding: 18px; 
-            border-radius: 14px; 
-            border: 1px solid var(--glass-border); 
-            cursor: pointer; 
-            margin-bottom: 12px; 
-            display: flex; justify-content: space-between; align-items: center; 
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            background: var(--card); padding: 16px; border-radius: 14px; 
+            border: 1px solid var(--glass-border); cursor: pointer; margin-bottom: 12px;
+            display: flex; justify-content: space-between; align-items: center;
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .inst-card:hover { background: rgba(255, 255, 255, 0.06); transform: translateX(5px); }
+        .inst-card.active { border-color: var(--accent); background: rgba(0, 255, 136, 0.08); box-shadow: 0 0 15px rgba(0,255,136,0.1); }
+
+        /* --- MAIN AREA --- */
+        .main { flex: 1; display: flex; flex-direction: column; position: relative; }
+
+        .top-nav { 
+            height: 80px; display: flex; align-items: center; justify-content: space-between; 
+            padding: 0 40px; border-bottom: 1px solid var(--glass-border);
+            background: rgba(5, 5, 5, 0.5); backdrop-filter: blur(10px);
         }
 
-        .inst-card:hover { 
-            background: rgba(255, 255, 255, 0.07);
-            transform: scale(1.02);
+        /* --- NAVIGATION TABS --- */
+        .view-switcher { display: flex; gap: 30px; padding: 20px 40px 0 40px; }
+        .view-btn { 
+            background: none; border: none; color: #555; font-weight: 800; 
+            cursor: pointer; font-size: 15px; padding: 10px 0; transition: 0.3s;
+            position: relative;
+        }
+        .view-btn.active { color: var(--accent); }
+        .view-btn.active::after { 
+            content: ''; position: absolute; bottom: -2px; left: 0; width: 100%; height: 2px; 
+            background: var(--accent); box-shadow: 0 0 10px var(--accent);
         }
 
-        .inst-card.active { 
-            border-color: var(--accent); 
-            background: rgba(0, 255, 136, 0.05);
+        /* --- CONTENT BROWSER --- */
+        .content-container { flex: 1; display: flex; flex-direction: column; padding: 20px 40px; overflow: hidden; }
+        
+        .filter-bar { display: flex; gap: 15px; margin-bottom: 20px; }
+        .filter-tag { 
+            padding: 6px 15px; border-radius: 20px; background: var(--card); 
+            border: 1px solid var(--glass-border); font-size: 11px; font-weight: 700; cursor: pointer; color: #888;
+        }
+        .filter-tag.active { background: var(--accent); color: black; border-color: var(--accent); }
+
+        .grid { 
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
+            gap: 15px; overflow-y: auto; padding-bottom: 200px;
         }
 
-        /* BUTTONS */
-        .btn-add { 
-            background: white; color: black; padding: 14px; border-radius: 12px;
-            font-weight: 700; border: none; margin-bottom: 30px; cursor: pointer;
-            transition: 0.3s;
+        /* --- CARDS --- */
+        .item-card { 
+            background: var(--card); border: 1px solid var(--glass-border); 
+            border-radius: 16px; padding: 15px; display: flex; align-items: center; gap: 15px;
+            transition: 0.2s;
+        }
+        .item-card:hover { border-color: #444; background: rgba(255,255,255,0.05); }
+        .item-card img { width: 50px; height: 50px; border-radius: 10px; object-fit: cover; background: #111; }
+        .item-card .info { flex: 1; min-width: 0; }
+        .item-card h4 { margin: 0; font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .item-card p { margin: 3px 0 0; font-size: 0.75rem; color: #777; }
+
+        /* --- BUTTONS --- */
+        .btn-action { 
+            background: var(--accent); color: black; border: none; padding: 8px 14px; 
+            border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 12px;
+        }
+        .btn-danger { 
+            background: rgba(255, 68, 68, 0.1); color: #ff4444; border: 1px solid #ff4444; 
+            padding: 8px 14px; border-radius: 8px; cursor: pointer; font-size: 12px;
         }
 
+        /* --- LOG CONSOLE (PERMANENT) --- */
+        #log-container {
+            position: absolute; bottom: 120px; left: 40px; right: 40px; height: 180px;
+            background: rgba(0,0,0,0.92); border: 1px solid var(--glass-border);
+            border-radius: 12px; padding: 15px; font-family: 'JetBrains Mono', monospace;
+            font-size: 11px; color: #00ff88; overflow-y: auto; display: none; z-index: 100;
+        }
+
+        /* --- PLAY BAR --- */
+        .play-bar { 
+            position: absolute; bottom: 0; left: 0; right: 0; height: 110px;
+            background: linear-gradient(to top, #050505 70%, transparent);
+            display: flex; align-items: center; justify-content: center; z-index: 50;
+        }
         .play-btn { 
-            background: var(--accent); width: 380px; height: 90px; 
-            font-size: 24px; font-weight: 800; letter-spacing: 6px;
-            border-radius: 18px; color: black; border: none; cursor: pointer;
-            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            background: var(--accent); width: 300px; height: 65px; border-radius: 15px;
+            border: none; font-weight: 900; font-size: 1.2rem; cursor: pointer; letter-spacing: 1px;
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+        .play-btn:hover:not(:disabled) { transform: scale(1.05); box-shadow: 0 0 30px var(--accent-glow); }
+        .play-btn:disabled { background: #1a1a1a; color: #444; cursor: not-allowed; }
 
-        .play-btn:disabled { background: #111; color: #333; cursor: not-allowed; }
-
-        /* MODAL */
+        /* --- MODALS --- */
         .modal-overlay { 
             position: fixed; inset: 0; background: rgba(0,0,0,0.85); 
-            backdrop-filter: blur(15px); display: none; justify-content: center; 
-            align-items: center; z-index: 100;
+            backdrop-filter: blur(10px); display: none; justify-content: center; 
+            align-items: center; z-index: 500; 
         }
-
         .modal-content { 
-            background: #0f0f0f; padding: 40px; border-radius: 28px; 
-            border: 1px solid var(--glass-border); width: 500px; 
-            display: flex; flex-direction: column; gap: 20px;
+            background: #0f0f0f; padding: 35px; border-radius: 24px; 
+            border: 1px solid var(--glass-border); width: 420px; display: flex; flex-direction: column; gap: 18px; 
         }
 
-        /* MOD SEARCH SPECIFIC */
-        #mod-results { height: 350px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
-        .mod-item { 
-            display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.03);
-            padding: 12px; border-radius: 12px; border: 1px solid var(--glass-border);
+        input, select { 
+            padding: 14px; border-radius: 10px; background: #151515; 
+            border: 1px solid #222; color: white; outline: none; font-size: 14px;
         }
-
-        /* MISC */
-        .main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30px; }
-        #log { width: 80%; height: 100px; background: rgba(0,0,0,0.3); border-radius: 12px; padding: 15px; font-family: monospace; font-size: 10px; color: #555; overflow-y: auto; }
-        input, select { padding: 12px; border-radius: 8px; background: #1a1a1a; border: 1px solid #333; color: white; }
-        .folder-btn { background: none; border: 1px solid #333; color: white; padding: 8px; border-radius: 8px; cursor: pointer; }
-        .folder-btn:hover { background: white; color: black; }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
 
     <div id="gen-modal" class="modal-overlay">
         <div class="modal-content">
             <h2 style="margin:0">Neue Instanz</h2>
-            <input type="text" id="new-name" placeholder="Name...">
+            <input type="text" id="new-name" placeholder="Name der Instanz...">
             <select id="version-select" onchange="updateLoaderOptions()"></select>
             <select id="loader-type" onchange="updateLoaderOptions()">
-                <option value="vanilla">Vanilla</option>
-                <option value="fabric">Fabric</option>
+                <option value="vanilla">Vanilla (Standard)</option>
+                <option value="fabric">Fabric Loader</option>
             </select>
             <div id="fabric-group" style="display:none;"><select id="fabric-select" style="width:100%"></select></div>
             <div id="gen-status" style="text-align:center; color:var(--accent); font-size:12px;">Bereit</div>
-            <div style="display:flex; gap:10px">
-                <button class="btn-add" style="background:#222; color:white; flex:1; margin:0" onclick="closeModal('gen-modal')">Abbrechen</button>
-                <button class="btn-add" style="flex:2; margin:0" onclick="confirmGen()">Erstellen</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="mod-modal" class="modal-overlay">
-        <div class="modal-content" style="width: 600px;">
-            <h2 style="margin:0">Modrinth Explorer</h2>
-            <div style="display:flex; gap:10px">
-                <input type="text" id="mod-search-input" placeholder="Suche Mods (z.B. Sodium)..." style="flex:1">
-                <button class="btn-add" style="margin:0; padding:0 20px" onclick="searchMods()">Suche</button>
-            </div>
-            <div id="mod-results"></div>
-            <button class="btn-add" style="background:#222; color:white; width:100%; margin:0" onclick="closeModal('mod-modal')">Schließen</button>
+            <button class="play-btn" style="width:100%; height:50px; font-size:14px;" onclick="confirmGen()">ERSTELLEN & INSTALLIEREN</button>
+            <button style="background:none; border:none; color:#555; cursor:pointer" onclick="closeModal('gen-modal')">Abbrechen</button>
         </div>
     </div>
 
     <div class="sidebar">
-        <h2>ROJ Launcher</h2>
-        <button class="btn-add" onclick="openModal('gen-modal')">+ NEUE INSTANZ</button>
+        <h2 style="font-size: 10px; letter-spacing: 5px; color: var(--accent); margin-bottom: 30px;">ROJ ENGINE</h2>
+        <button class="btn-action" style="padding:15px; margin-bottom:20px" onclick="openModal('gen-modal')">+ NEUE INSTANZ</button>
         <div id="instance-list" class="inst-list"></div>
     </div>
 
     <div class="main">
-        <div style="text-align:center">
-            <h1 id="current-name" style="font-size:4rem; margin:0">ROJ</h1>
-            <p id="current-meta" style="color:#444; letter-spacing:3px; font-weight:bold">WÄHLE EINE INSTANZ</p>
-            <button id="mod-mgr-btn" class="folder-btn" onclick="openModal('mod-modal')" style="display:none; margin-top:15px; border-color:var(--accent); color:var(--accent)">📦 MODS VERWALTEN</button>
+        <div class="top-nav">
+            <div>
+                <h3 id="display-name" style="margin:0">Willkommen</h3>
+                <span id="display-ver" style="color:#555; font-size:12px">Wähle eine Instanz</span>
+            </div>
+            <div style="display:flex; gap:15px; align-items:center">
+                <input type="text" id="search-bar" placeholder="Suchen..." style="background:#111; border:1px solid #222; padding:10px; border-radius:8px; color:white; width:220px;" oninput="refreshUI()">
+                <label style="font-size:11px; color:#444; cursor:pointer; display:flex; align-items:center; gap:5px">
+                    <input type="checkbox" id="log-toggle" onchange="toggleLog()"> LOGS ANZEIGEN
+                </label>
+            </div>
         </div>
 
-        <button id="play-btn" class="play-btn" onclick="toggleGame()" disabled>SPIELEN</button>
-        <div id="log">Console ready...</div>
+        <div class="view-switcher">
+            <button id="btn-lib" class="view-btn active" onclick="switchView('library')">MEINE BIBLIOTHEK</button>
+            <button id="btn-add" class="view-btn" onclick="switchView('modrinth')">ADD CONTENT (MODRINTH)</button>
+        </div>
+
+        <div class="content-container">
+            <div class="filter-bar" id="type-filter">
+                <div class="filter-tag active" onclick="setFilter('mods', this)">MODS</div>
+                <div class="filter-tag" onclick="setFilter('shaderpacks', this)">SHADER</div>
+                <div class="filter-tag" onclick="setFilter('resourcepacks', this)">TEXTUREN</div>
+            </div>
+            
+            <div id="main-grid" class="grid">
+                </div>
+        </div>
+
+        <div id="log-container"></div>
+
+        <div class="play-bar">
+            <button id="play-btn" class="play-btn" onclick="toggleGame()" disabled>SPIEL STARTEN</button>
+        </div>
     </div>
 
     <script>
         const { ipcRenderer } = require('electron');
         let selected = null;
         let isRunning = false;
+        let currentView = 'library';
+        let currentFilter = 'mods';
 
         window.onload = () => {
             ipcRenderer.send('get-instances');
@@ -173,90 +213,161 @@
 
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        function toggleLog() { document.getElementById('log-container').style.display = document.getElementById('log-toggle').checked ? 'block' : 'none'; }
 
-        // --- VERSIONEN & FABRIC ---
+        function switchView(v) {
+            currentView = v;
+            document.getElementById('btn-lib').classList.toggle('active', v === 'library');
+            document.getElementById('btn-add').classList.toggle('active', v === 'modrinth');
+            refreshUI();
+        }
+
+        function setFilter(f, el) {
+            currentFilter = f;
+            document.querySelectorAll('.filter-tag').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            refreshUI();
+        }
+
+        async function refreshUI() {
+            if (!selected) return;
+            const grid = document.getElementById('main-grid');
+            const search = document.getElementById('search-bar').value.toLowerCase();
+            grid.innerHTML = '';
+
+            if (currentView === 'library') {
+                const files = await ipcRenderer.invoke('get-local-files', { instName: selected.name, folder: currentFilter });
+                const filtered = files.filter(f => f.toLowerCase().includes(search));
+                
+                if(filtered.length === 0) grid.innerHTML = '<p style="color:#333">Keine Dateien in diesem Ordner.</p>';
+                
+                filtered.forEach(file => {
+                    grid.innerHTML += `
+                        <div class="item-card">
+                            <div class="info">
+                                <h4>${file}</h4>
+                                <p>Lokale Datei in /${currentFilter}</p>
+                            </div>
+                            <button class="btn-danger" onclick="deleteFile('${file}')">Löschen</button>
+                        </div>
+                    `;
+                });
+            } else {
+                let facet = `categories:fabric`;
+                if(currentFilter === 'shaderpacks') facet = `project_type:shader`;
+                if(currentFilter === 'resourcepacks') facet = `project_type:resourcepack`;
+
+                const res = await ipcRenderer.invoke('search-modrinth', { query: search, facet: facet });
+                res.hits.forEach(item => {
+                    grid.innerHTML += `
+                        <div class="item-card">
+                            <img src="${item.icon_url || ''}" onerror="this.src='https://modrinth.com/img/placeholder.svg'">
+                            <div class="info">
+                                <h4>${item.title}</h4>
+                                <p>${item.author}</p>
+                            </div>
+                            <button class="btn-action" onclick="installContent('${item.project_id}', '${item.title}')">INSTALL</button>
+                        </div>
+                    `;
+                });
+            }
+        }
+
+        async function installContent(id, title) {
+            const loader = currentFilter === 'mods' ? 'fabric' : ''; 
+            const versions = await ipcRenderer.invoke('get-mod-versions', { 
+                modId: id, mcVersion: selected.version.split('-')[0], loader 
+            });
+
+            if (versions.length > 0) {
+                const file = versions[0].files.find(f => f.primary) || versions[0].files[0];
+                ipcRenderer.send('install-content', { 
+                    instName: selected.name, 
+                    downloadUrl: file.url, 
+                    fileName: file.filename, 
+                    type: currentFilter 
+                });
+            } else {
+                alert("Keine passende Version für Minecraft " + selected.version + " gefunden.");
+            }
+        }
+
+        function deleteFile(fileName) {
+            if(confirm(`Möchtest du ${fileName} wirklich löschen?`)) {
+                ipcRenderer.send('delete-file', { instName: selected.name, folder: currentFilter, fileName });
+            }
+        }
+
+        // --- INSTANZ LOGIK ---
+        ipcRenderer.on('instance-ready', (e, data) => {
+            closeModal('gen-modal');
+            const div = document.createElement('div');
+            div.className = 'inst-card';
+            div.id = `inst-${data.name}`;
+            div.innerHTML = `
+                <div>
+                    <div style="font-weight:800; font-size:14px">${data.name}</div>
+                    <div style="font-size:10px; color:#555">${data.version}</div>
+                </div>
+                <div style="font-size:14px; opacity:0.3" onclick="event.stopPropagation(); ipcRenderer.send('open-folder', '${data.name}')">📂</div>
+            `;
+            div.onclick = () => {
+                selected = data;
+                document.querySelectorAll('.inst-card').forEach(c => c.classList.remove('active'));
+                div.classList.add('active');
+                document.getElementById('play-btn').disabled = false;
+                document.getElementById('display-name').innerText = data.name;
+                document.getElementById('display-ver').innerText = data.version;
+                refreshUI();
+            };
+            document.getElementById('instance-list').appendChild(div);
+        });
+
+        ipcRenderer.on('refresh-required', refreshUI);
+
+        // --- GENERATOR CONTROLS ---
         ipcRenderer.on('all-versions-list', (e, v) => {
-            const s = document.getElementById('version-select');
-            s.innerHTML = v.map(v => `<option value="${v.id}">Minecraft ${v.id}</option>`).join('');
+            document.getElementById('version-select').innerHTML = v.map(x => `<option value="${x.id}">MC ${x.id}</option>`).join('');
             updateLoaderOptions();
         });
 
         function updateLoaderOptions() {
-            const type = document.getElementById('loader-type').value;
-            const mcVer = document.getElementById('version-select').value;
-            if (type === 'fabric') {
-                document.getElementById('fabric-group').style.display = 'block';
-                ipcRenderer.send('get-fabric-loaders', mcVer);
-            } else {
-                document.getElementById('fabric-group').style.display = 'none';
-            }
+            const isFabric = document.getElementById('loader-type').value === 'fabric';
+            document.getElementById('fabric-group').style.display = isFabric ? 'block' : 'none';
+            if(isFabric) ipcRenderer.send('get-fabric-loaders', document.getElementById('version-select').value);
         }
 
         ipcRenderer.on('fabric-loaders-list', (e, l) => {
             document.getElementById('fabric-select').innerHTML = l.map(v => `<option value="${v}">Fabric ${v}</option>`).join('');
         });
 
-        // --- INSTANZEN ---
         function confirmGen() {
-            const name = document.getElementById('new-name').value;
-            const version = document.getElementById('version-select').value;
-            const loader = document.getElementById('loader-type').value;
-            if(!name) return;
-            ipcRenderer.send('run-generator', { name, version, fabricVersion: loader === 'fabric' ? document.getElementById('fabric-select').value : null });
-        }
-
-        ipcRenderer.on('instance-ready', (e, data) => {
-            closeModal('gen-modal');
-            const div = document.createElement('div');
-            div.className = 'inst-card';
-            div.innerHTML = `<div><b>${data.name}</b><br><small style="color:#555">${data.version}</small></div><button class="folder-btn" onclick="openFolder(event, '${data.name}')">📂</button>`;
-            div.onclick = () => {
-                document.querySelectorAll('.inst-card').forEach(c => c.classList.remove('active'));
-                div.classList.add('active');
-                selected = data;
-                document.getElementById('play-btn').disabled = false;
-                document.getElementById('current-name').innerText = data.name;
-                document.getElementById('current-meta').innerText = data.version;
-                // Zeige Mod-Manager nur wenn Fabric erkannt wird
-                document.getElementById('mod-mgr-btn').style.display = data.version.toLowerCase().includes('fabric') ? 'inline-block' : 'none';
-            };
-            document.getElementById('instance-list').appendChild(div);
-        });
-
-        // --- MODRINTH LOGIK ---
-        async function searchMods() {
-            const query = document.getElementById('mod-search-input').value;
-            const res = await ipcRenderer.invoke('search-mods', query);
-            const container = document.getElementById('mod-results');
-            container.innerHTML = res.hits.map(mod => `
-                <div class="mod-item">
-                    <img src="${mod.icon_url}" style="width:40px;height:40px;border-radius:8px">
-                    <div style="flex:1"><b>${mod.title}</b><br><small style="color:#555">${mod.author}</small></div>
-                    <button class="folder-btn" onclick="installMod('${mod.project_id}', '${mod.title}')">Install</button>
-                </div>
-            `).join('');
-        }
-
-        async function installMod(id, title) {
-            const versions = await ipcRenderer.invoke('get-mod-versions', { modId: id, mcVersion: selected.version });
-            if(!versions.length) return alert("Keine Version für " + selected.version + " gefunden!");
-            const file = versions[0].files.find(f => f.primary) || versions[0].files[0];
-            ipcRenderer.send('install-mod', { instName: selected.name, downloadUrl: file.url, fileName: file.filename });
+            ipcRenderer.send('run-generator', { 
+                name: document.getElementById('new-name').value, 
+                version: document.getElementById('version-select').value,
+                fabricVersion: document.getElementById('loader-type').value === 'fabric' ? document.getElementById('fabric-select').value : null
+            });
         }
 
         // --- GAME CONTROL ---
-        function toggleGame() { ipcRenderer.send('game-action', { action: isRunning ? 'stop' : 'start', name: selected.name, version: selected.version }); }
-        function openFolder(e, n) { e.stopPropagation(); ipcRenderer.send('open-folder', n); }
+        function toggleGame() { 
+            ipcRenderer.send('game-action', { action: isRunning ? 'stop' : 'start', name: selected.name, version: selected.version.split('-')[0] }); 
+        }
 
         ipcRenderer.on('game-status', (e, s) => {
             isRunning = (s === 'running');
             const btn = document.getElementById('play-btn');
-            btn.innerText = isRunning ? 'STOP' : 'SPIELEN';
-            btn.style.background = isRunning ? '#ff3333' : '#00ff88';
+            btn.innerText = isRunning ? 'SPIEL STOPPEN' : 'SPIEL STARTEN';
+            btn.style.background = isRunning ? '#ff3333' : 'var(--accent)';
         });
 
-        ipcRenderer.on('status', (e, d) => { document.getElementById('gen-status').innerText = `${d.msg} ${d.prog}%`; });
-        ipcRenderer.on('log', (e, m) => { const l = document.getElementById('log'); l.innerText += m; l.scrollTop = l.scrollHeight; });
+        ipcRenderer.on('status', (e, d) => { document.getElementById('gen-status').innerText = `${d.msg} (${d.prog}%)`; });
+
+        ipcRenderer.on('log', (e, m) => { 
+            const l = document.getElementById('log-container'); 
+            l.innerText += m; 
+            l.scrollTop = l.scrollHeight; 
+        });
     </script>
 </body>
 </html>
