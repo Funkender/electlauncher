@@ -1,0 +1,16 @@
+# Node.js Abhängigkeiten
+node_modules/
+
+# Minecraft Daten (JREs, Instanzen, Libraries - das sind die riesigen Dateien!)
+.minecraft/
+
+# Build-Ordner
+dist/
+out/
+
+# Betriebssystem-Dateien
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

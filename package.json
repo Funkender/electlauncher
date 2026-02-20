@@ -1,0 +1,19 @@
+{
+  "name": "electronroj",
+  "version": "1.0.0",
+  "description": "Mein erstes Electron Projekt",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^31.7.7"
+  },
+  "dependencies": {
+    "adm-zip": "^0.5.16",
+    "node-fetch": "^3.3.2",
+    "tar": "^7.5.9"
+  }
+}
