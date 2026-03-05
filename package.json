@@ -9,7 +9,7 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^31.7.7"
+    "electron": "^40.7.0"
   },
   "dependencies": {
     "adm-zip": "^0.5.16",

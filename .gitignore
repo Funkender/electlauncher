@@ -3,6 +3,7 @@ node_modules/
 
 # Minecraft Daten (JREs, Instanzen, Libraries - das sind die riesigen Dateien!)
 .minecraft/
+logs/
 
 # Build-Ordner
 dist/
