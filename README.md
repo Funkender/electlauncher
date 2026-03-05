@@ -1,3 +1,4 @@
-early preview with bugs!!!
-and windows thinks its a virus!!!
-but if you want read the code
+## Elect Launcher
+Early preview with bugs!!!
+And Windows thinks it's a virus!!!
+But this is just here in case you want read the code
