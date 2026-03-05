@@ -212,7 +212,7 @@ ipcMain.on('run-generator', async (e, { name, version, fabricVersion }) => {
 
         let finalData = vData;
         if (fabricVersion) {
-            log("Integiere Fabric...", 30);
+            log("Integriere Fabric...", 30);
             const fData = await fetch(`https://meta.fabricmc.net/v2/versions/loader/${version}/${fabricVersion}/profile/json`).then(r => r.json());
             finalData = { 
                 ...fData, 
