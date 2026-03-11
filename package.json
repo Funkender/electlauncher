@@ -1,19 +1,63 @@
 {
   "name": "electronroj",
   "version": "1.0.0",
-  "description": "Mein erstes Electron Projekt",
+  "description": "Mein erster Minecraft Launcher",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
   },
-  "author": "",
+  "author": "Funkelnder",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Funkender/electlauncher.git"
+  },
+  "build": {
+    "appId": "com.funkelnder.electronroj",
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "Funkender",
+        "repo": "electlauncher"
+      }
+    ]
+  },
+  "config": {
+    "forge": {
+      "packagerConfig": {
+        "icon": "./app"
+      },
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "electronroj",
+            "authors": "Funkelnder",
+            "description": "Mein erster Minecraft Launcher",
+            "setupIcon": "./app.ico",
+            "setupExe": "electronroj-installer.exe"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "win32"
+          ]
+        }
+      ]
+    }
+  },
   "devDependencies": {
-    "electron": "^40.7.0"
+    "@electron-forge/cli": "^7.11.1",
+    "@electron-forge/maker-squirrel": "^7.11.1",
+    "@electron-forge/maker-zip": "^7.11.1",
+    "electron": "^31.7.7"
   },
   "dependencies": {
     "adm-zip": "^0.5.16",
-    "node-fetch": "^3.3.2",
-    "tar": "^7.5.9"
+    "electron-squirrel-startup": "^1.0.1",
+    "electron-updater": "^6.8.3"
   }
 }
