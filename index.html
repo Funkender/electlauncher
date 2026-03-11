@@ -32,6 +32,11 @@
             <span class="theme-label">THEME</span>
             <input type="color" id="theme-picker" value="#ffff00" oninput="changeTheme(this.value)">
         </div>
+
+        <div class="theme-section" style="flex-direction: column; align-items: flex-start; gap: 8px;">
+            <span class="theme-label">SYSTEM UPDATE</span>
+            <button id="update-btn" class="btn-action" style="width:100%; font-size:10px; height: 30px;" onclick="checkUpdate()">NACH UPDATES SUCHEN</button>
+        </div>
     </div>
 
     <div class="main">
@@ -76,8 +81,9 @@
         let currentView = 'library';
         let currentFilter = 'mods';
 
-        // --- THEME BEIM START LADEN ---
+        // --- INITIALISIERUNG BEIM START ---
         window.onload = () => {
+            // Theme laden
             const savedColor = localStorage.getItem('app-theme-color');
             if (savedColor) {
                 applyTheme(savedColor);
@@ -88,7 +94,31 @@
             ipcRenderer.send('get-all-versions');
         };
 
-        // Hilfsfunktion zum Anwenden der CSS-Variablen
+        // --- UPDATE LOGIK ---
+        function checkUpdate() {
+            ipcRenderer.send('check-update');
+            document.getElementById('update-btn').innerText = "PRÜFE...";
+        }
+
+        ipcRenderer.on('update-available', (e, version) => {
+            const btn = document.getElementById('update-btn');
+            btn.innerText = `UPDATE V${version} LADEN`;
+            btn.style.background = "#44ff44";
+            btn.style.color = "black";
+            btn.onclick = () => {
+                ipcRenderer.send('start-download');
+                btn.innerText = "LÄDT...";
+                btn.disabled = true;
+            };
+        });
+
+        ipcRenderer.on('update-ready', () => {
+            if(confirm("Update erfolgreich heruntergeladen. Jetzt installieren und neu starten?")) {
+                ipcRenderer.send('quit-and-install');
+            }
+        });
+
+        // --- THEME LOGIK ---
         function applyTheme(color) {
             document.documentElement.style.setProperty('--accent', color);
             const r = parseInt(color.slice(1, 3), 16);
@@ -97,13 +127,12 @@
             document.documentElement.style.setProperty('--accent-glow', `rgba(${r}, ${g}, ${b}, 0.2)`);
         }
 
-        // Funktion für den Picker (Anwenden + Speichern)
         function changeTheme(color) {
             applyTheme(color);
             localStorage.setItem('app-theme-color', color);
         }
 
-        // --- ALLE ORIGINAL-FUNKTIONEN (UNGEKÜRZT) ---
+        // --- UI & MODAL LOGIK ---
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
         function toggleLog() { document.getElementById('log-container').style.display = document.getElementById('log-toggle').checked ? 'block' : 'none'; }
@@ -180,6 +209,7 @@
             }
         }
 
+        // --- IPC EVENTS ---
         ipcRenderer.on('instance-ready', (e, data) => {
             closeModal('gen-modal');
             const div = document.createElement('div');
@@ -236,7 +266,6 @@
             isRunning = (s === 'running');
             const btn = document.getElementById('play-btn');
             btn.innerText = isRunning ? 'SPIEL STOPPEN' : 'SPIEL STARTEN';
-            // Beachte: Wir nutzen hier var(--accent), damit die gespeicherte Farbe auch am Button wirkt
             btn.style.background = isRunning ? '#ff3333' : 'var(--accent)';
         });
 
