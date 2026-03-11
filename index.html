@@ -1,142 +1,129 @@
 <!DOCTYPE html>
-<html lang="de">
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+</head>
 <body>
-<link rel="stylesheet" href="./main.css">
 
-<div id="gen-modal" class="modal-overlay">
-    <div class="modal-content">
-        <h2 style="margin:0">Neue Instanz</h2>
-        <input type="text" id="new-name" placeholder="Name der Instanz...">
-        <select id="version-select" onchange="updateLoaderOptions()"></select>
-        <select id="loader-type" onchange="updateLoaderOptions()">
-            <option value="vanilla">Vanilla (Standard)</option>
-            <option value="fabric">Fabric Loader</option>
-        </select>
-        <div id="fabric-group" style="display:none;"><select id="fabric-select" style="width:100%"></select></div>
-        <div id="gen-status" style="text-align:center; color:var(--accent); font-size:12px;">Bereit</div>
-        <button class="play-btn" style="width:100%; height:50px; font-size:14px;" onclick="confirmGen()">ERSTELLEN &
-            INSTALLIEREN
-        </button>
-        <button style="background:none; border:none; color:#555; cursor:pointer" onclick="closeModal('gen-modal')">
-            Abbrechen
-        </button>
-    </div>
-</div>
-
-<div class="sidebar">
-    <h2 style="font-size: 10px; letter-spacing: 5px; color: var(--accent); margin-bottom: 30px;">ROJ ENGINE</h2>
-    <button class="btn-action" style="padding:15px; margin-bottom:20px" onclick="openModal('gen-modal')">+ NEUE
-        INSTANZ
-    </button>
-
-    <div id="instance-list" class="inst-list"></div>
-
-    <div class="theme-section">
-        <span class="theme-label">THEME</span>
-        <input type="color" id="theme-picker" value="#ffff00" oninput="changeTheme(this.value)">
-    </div>
-</div>
-
-<div class="main">
-    <div class="top-nav">
-        <div>
-            <h3 id="display-name" style="margin:0">Willkommen</h3>
-            <span id="display-ver" style="color:#555; font-size:12px">Wähle eine Instanz</span>
-        </div>
-        <div style="display:flex; gap:15px; align-items:center">
-            <input type="text" id="search-bar" placeholder="Suchen..."
-                   style="background:#111; border:1px solid #222; padding:10px; border-radius:8px; color:white; width:220px;"
-                   oninput="refreshUI()">
-            <label style="font-size:11px; color:#444; cursor:pointer; display:flex; align-items:center; gap:5px">
-                <input type="checkbox" id="log-toggle" onchange="toggleLog()"> LOGS ANZEIGEN
-            </label>
+    <div id="gen-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 style="margin:0">Neue Instanz</h2>
+            <input type="text" id="new-name" placeholder="Name der Instanz...">
+            <select id="version-select" onchange="updateLoaderOptions()"></select>
+            <select id="loader-type" onchange="updateLoaderOptions()">
+                <option value="vanilla">Vanilla (Standard)</option>
+                <option value="fabric">Fabric Loader</option>
+            </select>
+            <div id="fabric-group" style="display:none;"><select id="fabric-select" style="width:100%"></select></div>
+            <div id="gen-status" style="text-align:center; color:var(--accent); font-size:12px;">Bereit</div>
+            <button class="play-btn" style="width:100%; height:50px; font-size:14px;" onclick="confirmGen()">ERSTELLEN & INSTALLIEREN</button>
+            <button style="background:none; border:none; color:#555; cursor:pointer" onclick="closeModal('gen-modal')">Abbrechen</button>
         </div>
     </div>
 
-    <div class="view-switcher">
-        <button id="btn-lib" class="view-btn active" onclick="switchView('library')">MEINE BIBLIOTHEK</button>
-        <button id="btn-add" class="view-btn" onclick="switchView('modrinth')">ADD CONTENT (MODRINTH)</button>
+    <div class="sidebar">
+        <h2 style="font-size: 10px; letter-spacing: 5px; color: var(--accent); margin-bottom: 30px;">ROJ ENGINE</h2>
+        <button class="btn-action" style="padding:15px; margin-bottom:20px" onclick="openModal('gen-modal')">+ NEUE INSTANZ</button>
+        
+        <div id="instance-list" class="inst-list"></div>
+
+        <div class="theme-section">
+            <span class="theme-label">THEME</span>
+            <input type="color" id="theme-picker" value="#ffff00" oninput="changeTheme(this.value)">
+        </div>
     </div>
 
-    <div class="content-container">
-        <div class="filter-bar" id="type-filter">
-            <div class="filter-tag active" onclick="setFilter('mods', this)">MODS</div>
-            <div class="filter-tag" onclick="setFilter('shaderpacks', this)">SHADER</div>
-            <div class="filter-tag" onclick="setFilter('resourcepacks', this)">TEXTUREN</div>
+    <div class="main">
+        <div class="top-nav">
+            <div>
+                <h3 id="display-name" style="margin:0">Willkommen</h3>
+                <span id="display-ver" style="color:#555; font-size:12px">Wähle eine Instanz</span>
+            </div>
+            <div style="display:flex; gap:15px; align-items:center">
+                <input type="text" id="search-bar" placeholder="Suchen..." style="background:#111; border:1px solid #222; padding:10px; border-radius:8px; color:white; width:220px;" oninput="refreshUI()">
+                <label style="font-size:11px; color:#444; cursor:pointer; display:flex; align-items:center; gap:5px">
+                    <input type="checkbox" id="log-toggle" onchange="toggleLog()"> LOGS ANZEIGEN
+                </label>
+            </div>
         </div>
 
-        <div id="main-grid" class="grid"></div>
+        <div class="view-switcher">
+            <button id="btn-lib" class="view-btn active" onclick="switchView('library')">MEINE BIBLIOTHEK</button>
+            <button id="btn-add" class="view-btn" onclick="switchView('modrinth')">ADD CONTENT (MODRINTH)</button>
+        </div>
+
+        <div class="content-container">
+            <div class="filter-bar" id="type-filter">
+                <div class="filter-tag active" onclick="setFilter('mods', this)">MODS</div>
+                <div class="filter-tag" onclick="setFilter('shaderpacks', this)">SHADER</div>
+                <div class="filter-tag" onclick="setFilter('resourcepacks', this)">TEXTUREN</div>
+            </div>
+            
+            <div id="main-grid" class="grid"></div>
+        </div>
+
+        <div id="log-container"></div>
+
+        <div class="play-bar">
+            <button id="play-btn" class="play-btn" onclick="toggleGame()" disabled>SPIEL STARTEN</button>
+        </div>
     </div>
 
-    <div id="log-container"></div>
+    <script>
+        const { ipcRenderer } = require('electron');
+        let selected = null;
+        let isRunning = false;
+        let currentView = 'library';
+        let currentFilter = 'mods';
 
-    <div class="play-bar">
-        <button id="play-btn" class="play-btn" onclick="toggleGame()" disabled>SPIEL STARTEN</button>
-    </div>
-</div>
+        window.onload = () => {
+            ipcRenderer.send('get-instances');
+            ipcRenderer.send('get-all-versions');
+        };
 
-<script>
-    const {ipcRenderer} = require('electron');
-    let selected = null;
-    let isRunning = false;
-    let currentView = 'library';
-    let currentFilter = 'mods';
+        // --- NEU: THEME LOGIK ---
+        function changeTheme(color) {
+            document.documentElement.style.setProperty('--accent', color);
+            // Berechnet eine transparente Version für den Glow
+            const r = parseInt(color.slice(1, 3), 16);
+            const g = parseInt(color.slice(3, 5), 16);
+            const b = parseInt(color.slice(5, 7), 16);
+            document.documentElement.style.setProperty('--accent-glow', `rgba(${r}, ${g}, ${b}, 0.2)`);
+        }
 
-    window.onload = () => {
-        ipcRenderer.send('get-instances');
-        ipcRenderer.send('get-all-versions');
-    };
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        function toggleLog() { document.getElementById('log-container').style.display = document.getElementById('log-toggle').checked ? 'block' : 'none'; }
 
-    // --- NEU: THEME LOGIK ---
-    function changeTheme(color) {
-        document.documentElement.style.setProperty('--accent', color);
-        // Berechnet eine transparente Version für den Glow
-        const r = parseInt(color.slice(1, 3), 16);
-        const g = parseInt(color.slice(3, 5), 16);
-        const b = parseInt(color.slice(5, 7), 16);
-        document.documentElement.style.setProperty('--accent-glow', `rgba(${r}, ${g}, ${b}, 0.2)`);
-    }
+        function switchView(v) {
+            currentView = v;
+            document.getElementById('btn-lib').classList.toggle('active', v === 'library');
+            document.getElementById('btn-add').classList.toggle('active', v === 'modrinth');
+            refreshUI();
+        }
 
-    function openModal(id) {
-        document.getElementById(id).style.display = 'flex';
-    }
+        function setFilter(f, el) {
+            currentFilter = f;
+            document.querySelectorAll('.filter-tag').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            refreshUI();
+        }
 
-    function closeModal(id) {
-        document.getElementById(id).style.display = 'none';
-    }
+        async function refreshUI() {
+            if (!selected) return;
+            const grid = document.getElementById('main-grid');
+            const search = document.getElementById('search-bar').value.toLowerCase();
+            grid.innerHTML = '';
 
-    function toggleLog() {
-        document.getElementById('log-container').style.display = document.getElementById('log-toggle').checked ? 'block' : 'none';
-    }
-
-    function switchView(v) {
-        currentView = v;
-        document.getElementById('btn-lib').classList.toggle('active', v === 'library');
-        document.getElementById('btn-add').classList.toggle('active', v === 'modrinth');
-        refreshUI();
-    }
-
-    function setFilter(f, el) {
-        currentFilter = f;
-        document.querySelectorAll('.filter-tag').forEach(t => t.classList.remove('active'));
-        el.classList.add('active');
-        refreshUI();
-    }
-
-    async function refreshUI() {
-        if (!selected) return;
-        const grid = document.getElementById('main-grid');
-        const search = document.getElementById('search-bar').value.toLowerCase();
-        grid.innerHTML = '';
-
-        if (currentView === 'library') {
-            const files = await ipcRenderer.invoke('get-local-files', {instName: selected.name, folder: currentFilter});
-            const filtered = files.filter(f => f.toLowerCase().includes(search));
-
-            if (filtered.length === 0) grid.innerHTML = '<p style="color:#333">Keine Dateien in diesem Ordner.</p>';
-
-            filtered.forEach(file => {
-                grid.innerHTML += `
+            if (currentView === 'library') {
+                const files = await ipcRenderer.invoke('get-local-files', { instName: selected.name, folder: currentFilter });
+                const filtered = files.filter(f => f.toLowerCase().includes(search));
+                
+                if(filtered.length === 0) grid.innerHTML = '<p style="color:#333">Keine Dateien in diesem Ordner.</p>';
+                
+                filtered.forEach(file => {
+                    grid.innerHTML += `
                         <div class="item-card">
                             <div class="info">
                                 <h4>${file}</h4>
@@ -145,15 +132,15 @@
                             <button class="btn-danger" onclick="deleteFile('${file}')">Löschen</button>
                         </div>
                     `;
-            });
-        } else {
-            let facet = `categories:fabric`;
-            if (currentFilter === 'shaderpacks') facet = `project_type:shader`;
-            if (currentFilter === 'resourcepacks') facet = `project_type:resourcepack`;
+                });
+            } else {
+                let facet = `categories:fabric`;
+                if(currentFilter === 'shaderpacks') facet = `project_type:shader`;
+                if(currentFilter === 'resourcepacks') facet = `project_type:resourcepack`;
 
-            const res = await ipcRenderer.invoke('search-modrinth', {query: search, facet: facet});
-            res.hits.forEach(item => {
-                grid.innerHTML += `
+                const res = await ipcRenderer.invoke('search-modrinth', { query: search, facet: facet });
+                res.hits.forEach(item => {
+                    grid.innerHTML += `
                         <div class="item-card">
                             <img src="${item.icon_url || ''}" onerror="this.src='https://modrinth.com/img/placeholder.svg'">
                             <div class="info">
@@ -163,108 +150,102 @@
                             <button class="btn-action" onclick="installContent('${item.project_id}', '${item.title}')">INSTALL</button>
                         </div>
                     `;
+                });
+            }
+        }
+
+        async function installContent(id, title) {
+            const loader = currentFilter === 'mods' ? 'fabric' : ''; 
+            const versions = await ipcRenderer.invoke('get-mod-versions', { 
+                modId: id, mcVersion: selected.version.split('-')[0], loader 
             });
+
+            if (versions.length > 0) {
+                const file = versions[0].files.find(f => f.primary) || versions[0].files[0];
+                ipcRenderer.send('install-content', { 
+                    instName: selected.name, 
+                    downloadUrl: file.url, 
+                    fileName: file.filename, 
+                    type: currentFilter 
+                });
+            } else {
+                alert("Keine passende Version für Minecraft " + selected.version + " gefunden.");
+            }
         }
-    }
 
-    async function installContent(id, title) {
-        const loader = currentFilter === 'mods' ? 'fabric' : '';
-        const versions = await ipcRenderer.invoke('get-mod-versions', {
-            modId: id, mcVersion: selected.version.split('-')[0], loader
-        });
-
-        if (versions.length > 0) {
-            const file = versions[0].files.find(f => f.primary) || versions[0].files[0];
-            ipcRenderer.send('install-content', {
-                instName: selected.name,
-                downloadUrl: file.url,
-                fileName: file.filename,
-                type: currentFilter
-            });
-        } else {
-            alert("Keine passende Version für Minecraft " + selected.version + " gefunden.");
+        function deleteFile(fileName) {
+            if(confirm(`Möchtest du ${fileName} wirklich löschen?`)) {
+                ipcRenderer.send('delete-file', { instName: selected.name, folder: currentFilter, fileName });
+            }
         }
-    }
 
-    function deleteFile(fileName) {
-        if (confirm(`Möchtest du ${fileName} wirklich löschen?`)) {
-            ipcRenderer.send('delete-file', {instName: selected.name, folder: currentFilter, fileName});
-        }
-    }
-
-    ipcRenderer.on('instance-ready', (e, data) => {
-        closeModal('gen-modal');
-        const div = document.createElement('div');
-        div.className = 'inst-card';
-        div.id = `inst-${data.name}`;
-        div.innerHTML = `
+        ipcRenderer.on('instance-ready', (e, data) => {
+            closeModal('gen-modal');
+            const div = document.createElement('div');
+            div.className = 'inst-card';
+            div.id = `inst-${data.name}`;
+            div.innerHTML = `
                 <div>
                     <div style="font-weight:800; font-size:14px">${data.name}</div>
                     <div style="font-size:10px; color:#555">${data.version}</div>
                 </div>
                 <div style="font-size:14px; opacity:0.3" onclick="event.stopPropagation(); ipcRenderer.send('open-folder', '${data.name}')">📂</div>
             `;
-        div.onclick = () => {
-            selected = data;
-            document.querySelectorAll('.inst-card').forEach(c => c.classList.remove('active'));
-            div.classList.add('active');
-            document.getElementById('play-btn').disabled = false;
-            document.getElementById('display-name').innerText = data.name;
-            document.getElementById('display-ver').innerText = data.version;
-            refreshUI();
-        };
-        document.getElementById('instance-list').appendChild(div);
-    });
-
-    ipcRenderer.on('refresh-required', refreshUI);
-
-    ipcRenderer.on('all-versions-list', (e, v) => {
-        document.getElementById('version-select').innerHTML = v.map(x => `<option value="${x.id}">MC ${x.id}</option>`).join('');
-        updateLoaderOptions();
-    });
-
-    function updateLoaderOptions() {
-        const isFabric = document.getElementById('loader-type').value === 'fabric';
-        document.getElementById('fabric-group').style.display = isFabric ? 'block' : 'none';
-        if (isFabric) ipcRenderer.send('get-fabric-loaders', document.getElementById('version-select').value);
-    }
-
-    ipcRenderer.on('fabric-loaders-list', (e, l) => {
-        document.getElementById('fabric-select').innerHTML = l.map(v => `<option value="${v}">Fabric ${v}</option>`).join('');
-    });
-
-    function confirmGen() {
-        ipcRenderer.send('run-generator', {
-            name: document.getElementById('new-name').value,
-            version: document.getElementById('version-select').value,
-            fabricVersion: document.getElementById('loader-type').value === 'fabric' ? document.getElementById('fabric-select').value : null
+            div.onclick = () => {
+                selected = data;
+                document.querySelectorAll('.inst-card').forEach(c => c.classList.remove('active'));
+                div.classList.add('active');
+                document.getElementById('play-btn').disabled = false;
+                document.getElementById('display-name').innerText = data.name;
+                document.getElementById('display-ver').innerText = data.version;
+                refreshUI();
+            };
+            document.getElementById('instance-list').appendChild(div);
         });
-    }
 
-    function toggleGame() {
-        ipcRenderer.send('game-action', {
-            action: isRunning ? 'stop' : 'start',
-            name: selected.name,
-            version: selected.version.split('-')[0]
+        ipcRenderer.on('refresh-required', refreshUI);
+
+        ipcRenderer.on('all-versions-list', (e, v) => {
+            document.getElementById('version-select').innerHTML = v.map(x => `<option value="${x.id}">MC ${x.id}</option>`).join('');
+            updateLoaderOptions();
         });
-    }
 
-    ipcRenderer.on('game-status', (e, s) => {
-        isRunning = (s === 'running');
-        const btn = document.getElementById('play-btn');
-        btn.innerText = isRunning ? 'SPIEL STOPPEN' : 'SPIEL STARTEN';
-        btn.style.background = isRunning ? '#ff3333' : 'var(--accent)';
-    });
+        function updateLoaderOptions() {
+            const isFabric = document.getElementById('loader-type').value === 'fabric';
+            document.getElementById('fabric-group').style.display = isFabric ? 'block' : 'none';
+            if(isFabric) ipcRenderer.send('get-fabric-loaders', document.getElementById('version-select').value);
+        }
 
-    ipcRenderer.on('status', (e, d) => {
-        document.getElementById('gen-status').innerText = `${d.msg} (${d.prog}%)`;
-    });
+        ipcRenderer.on('fabric-loaders-list', (e, l) => {
+            document.getElementById('fabric-select').innerHTML = l.map(v => `<option value="${v}">Fabric ${v}</option>`).join('');
+        });
 
-    ipcRenderer.on('log', (e, m) => {
-        const l = document.getElementById('log-container');
-        l.innerText += m;
-        l.scrollTop = l.scrollHeight;
-    });
-</script>
+        function confirmGen() {
+            ipcRenderer.send('run-generator', { 
+                name: document.getElementById('new-name').value, 
+                version: document.getElementById('version-select').value,
+                fabricVersion: document.getElementById('loader-type').value === 'fabric' ? document.getElementById('fabric-select').value : null
+            });
+        }
+
+        function toggleGame() { 
+            ipcRenderer.send('game-action', { action: isRunning ? 'stop' : 'start', name: selected.name, version: selected.version.split('-')[0] }); 
+        }
+
+        ipcRenderer.on('game-status', (e, s) => {
+            isRunning = (s === 'running');
+            const btn = document.getElementById('play-btn');
+            btn.innerText = isRunning ? 'SPIEL STOPPEN' : 'SPIEL STARTEN';
+            btn.style.background = isRunning ? '#ff3333' : 'var(--accent)';
+        });
+
+        ipcRenderer.on('status', (e, d) => { document.getElementById('gen-status').innerText = `${d.msg} (${d.prog}%)`; });
+
+        ipcRenderer.on('log', (e, m) => { 
+            const l = document.getElementById('log-container'); 
+            l.innerText += m; 
+            l.scrollTop = l.scrollHeight; 
+        });
+    </script>
 </body>
 </html>
